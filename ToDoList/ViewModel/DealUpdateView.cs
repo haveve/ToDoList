@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 using ToDoList.Models;
 
 namespace ToDoList.ViewModel
@@ -6,10 +7,10 @@ namespace ToDoList.ViewModel
     public class DealUpdateView
     {
         public int Id { get; set; }
-        [Required]
+        [BindRequired]
         public int CategoryId { get; set; }
         [MaxLength(55)]
-        [Required]
+        [BindRequired]
         public string Name { get; set; }
         public bool IsComplete { get; set; }
         public DateTime? DueDate { get; set; }

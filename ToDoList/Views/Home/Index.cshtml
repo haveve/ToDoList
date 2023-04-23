@@ -1,9 +1,5 @@
 ﻿@model ToDoList.ViewModel.ToDoListView
 @using ToDoList.ViewModel;
-@{
-    Layout = null;
-}
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,13 +48,10 @@
                         <select asp-for="DealV.CategoryId" id="">
                             @foreach (var c in Model.Categories)
                             {
-                                @if (c.Id == Model.DealUpdate.CategoryId)
+                                 if (c.Id > 0)
                                 {
-                                    <option value="@c.Id" selected = "selected">@c.Name</option>
-                                }
-                                else if (c.Id > 0)
-                                {
-                                    <option value="@c.Id">@c.Name</option>
+                                     var isChecked = c.Id == Model.DealUpdate.CategoryId; 
+                                    <option value="@c.Id" selected = "@isChecked" >@c.Name</option>
                                 }
                             }
                         </select>
@@ -87,13 +80,25 @@
                     <select asp-for="CategorySort.CategorySortId" id="">
                         @foreach (var c in Model.Categories)
                         {
+                            bool isSelected = @Context.Session.GetInt32("CategorySort") == c.Id;
 
-                            <option value="@c.Id">@c.Name</option>
+                            <option value="@c.Id" selected="@isSelected">@c.Name</option>
 
                         }
                     </select>
                     <input type="submit" value="sort tasks">
                 </p>
+            </form>
+        </div>
+
+        <div class="add-task">
+            <form asp-action="FileMethod" asp-controller="Home" method="post">
+                <select name="Id">
+                        <option value="1">DataBase</option>
+                    <option value="2">XML file</option>
+
+                </select>
+                <input type="submit" value="apply source">
             </form>
         </div>
 

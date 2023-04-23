@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using System.Net;
 using ToDoList.Models.DapperClasses;
+using ToDoList.Models.FileMethodClasses;
+using ToDoList.Models.XmlStorageClasses;
 
 namespace ToDoList
 {
@@ -17,6 +19,12 @@ namespace ToDoList
             //Dapper
             builder.Services.AddSingleton<DapperConnectionProvider>();
             builder.Services.AddScoped<IAppRepository, AppRepository>();
+
+            //XmlStorage
+            builder.Services.AddScoped<IXmlStorageRepository, XmlStorageRepository>();
+
+            //ManageFileMethod
+            builder.Services.AddScoped<IFileMethod, FileMethod>();
 
             builder.Services.AddDistributedMemoryCache();// add IDistributedMemoryCache
             builder.Services.AddSession(options =>
@@ -47,7 +55,7 @@ namespace ToDoList
             app.UseSession();   // add midlware for work with session
 
             //Rewrite rout when user wanna Update Task state when that is in updating state
-            var options = new RewriteOptions().AddRedirect("Home/GetTask/Home/UpdateDealState/(\\d+)", "Home/UpdateDealState?Id=$1");
+            var options = new RewriteOptions().AddRedirect(@"Home/GetTask/Home/UpdateDealState/(\d+)", "Home/UpdateDealState?Id=$1");
             app.UseRewriter(options);
 
             app.MapControllerRoute(

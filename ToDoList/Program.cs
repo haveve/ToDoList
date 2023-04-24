@@ -26,14 +26,6 @@ namespace ToDoList
             //ManageFileMethod
             builder.Services.AddScoped<IFileMethod, FileMethod>();
 
-            builder.Services.AddDistributedMemoryCache();// add IDistributedMemoryCache
-            builder.Services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });  // add session
-
 
             var app = builder.Build();
 
@@ -52,7 +44,6 @@ namespace ToDoList
 
             app.UseAuthorization();
 
-            app.UseSession();   // add midlware for work with session
 
             //Rewrite rout when user wanna Update Task state when that is in updating state
             var options = new RewriteOptions().AddRedirect(@"Home/GetTask/Home/UpdateDealState/(\d+)", "Home/UpdateDealState?Id=$1");

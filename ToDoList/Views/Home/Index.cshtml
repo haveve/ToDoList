@@ -80,9 +80,7 @@
                     <select asp-for="CategorySort.CategorySortId" id="">
                         @foreach (var c in Model.Categories)
                         {
-                            bool isSelected = @Context.Session.GetInt32("CategorySort") == c.Id;
-
-                            <option value="@c.Id" selected="@isSelected">@c.Name</option>
+                            <option value="@c.Id">@c.Name</option>
 
                         }
                     </select>

@@ -15,8 +15,8 @@ namespace ToDoList.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IFileMethod _appRepository;
 
-        private List<Category> _categories;
-        private List<Deal> _deals;
+        private List<Category> _categories = null!;
+        private List<Deal> _deals= null!;
 
         private List<Deal> SortDeals()
         {
@@ -43,7 +43,8 @@ namespace ToDoList.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
-            _appRepository.fileMethod(HttpContext.Session.GetInt32("FileMethod"));
+            int.TryParse(ControllerContext.HttpContext.Request.Cookies["FileMethod"], out int value);
+            _appRepository.fileMethod(value);
             _categories = _appRepository.GetCategories();
             _categories.Insert(0, new Category { Id = -1, Name = "All Categories" });
             _deals = _appRepository.GetDeals();
@@ -52,13 +53,14 @@ namespace ToDoList.Controllers
 
         public IActionResult GetTask(DealUpdateView DealUpdate)
         {
-            int? CategorySortId = HttpContext.Session.GetInt32("CategorySort");
+            int.TryParse(ControllerContext.HttpContext.Request.Cookies["CategorySort"],out int value);
+            int CategorySortId = value;
             var a = new ToDoListView();
             a.Categories = _categories;
             a.Deals = SortDeals();
             a.DealUpdate = DealUpdate;
 
-            if (CategorySortId == null || CategorySortId<0)
+            if ( CategorySortId<=0)
                 return View("Index", a);
 
             a.Deals = SortDeals().Where(d => d.CategoryId == CategorySortId).ToList();
@@ -68,8 +70,7 @@ namespace ToDoList.Controllers
         [HttpPost]
         public IActionResult SortTask(CategorySortView CategorySort)
         {
-           
-            HttpContext.Session.SetInt32("CategorySort",CategorySort.CategorySortId);
+            HttpContext.Response.Cookies.Append("CategorySort", CategorySort.CategorySortId.ToString());
             return RedirectToAction("GetTask", new {CategorySort.CategorySortId });
         }
 
@@ -114,21 +115,41 @@ namespace ToDoList.Controllers
 
         public RedirectToActionResult UpdateDealRedirect(int Id)
         {
-            var DealUpdate = new DealUpdateView(_deals.FirstOrDefault(d => d.Id == Id));
-            return RedirectToAction("GetTask", new {DealUpdate.Id ,DealUpdate.DueDate, DealUpdate.CategoryId,DealUpdate.Name,DealUpdate.IsComplete });
+            DealUpdateView DealUpdate = new();
+            try
+            {
+                DealUpdate = new DealUpdateView(_deals.First(d => d.Id == Id));
+            }
+            catch
+            {
+                throw new NullReferenceException("Does not exist deal with added id");
+            }
+                return RedirectToAction("GetTask", new {DealUpdate.Id ,DealUpdate.DueDate, DealUpdate.CategoryId,DealUpdate.Name,DealUpdate.IsComplete });
+       
         }
 
         public IActionResult UpdateDealState(int Id)
         {
-            Deal deal = _deals.FirstOrDefault(d => d.Id == Id);
-            _appRepository.UpdateStateDeal(Id, !deal.IsComplete);
+            Deal deal = new();
+
+            try { 
+
+             deal = _deals.First(d => d.Id == Id);
+            
+            }
+            catch
+            {
+                throw new NullReferenceException("Does not exist deal with added id");
+            }
+
+            _appRepository.UpdateStateDeal(Id, deal.IsComplete);
             return RedirectToAction("GetTask");
         }
 
         public IActionResult FileMethod(int Id)
         {
-            ControllerContext.HttpContext.Session.SetInt32("FileMethod", Id);
-            ControllerContext.HttpContext.Session.Remove("CategorySort");
+            HttpContext.Response.Cookies.Append("FileMethod", Id.ToString());
+            HttpContext.Response.Cookies.Delete("CategorySort");
             return RedirectToAction("GetTask");
         }
 

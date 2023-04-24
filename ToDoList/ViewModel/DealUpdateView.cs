@@ -15,15 +15,19 @@ namespace ToDoList.ViewModel
         public bool IsComplete { get; set; }
         public DateTime? DueDate { get; set; }
 
-        public DealUpdateView() { }
+        public DealUpdateView() 
+        {
+        
+        
+        }
 
         public DealUpdateView(Deal deal)
         {
-            Id = deal.Id;
-            Name = deal.Name;
-            CategoryId = deal.CategoryId;
-            IsComplete = deal.IsComplete;
-            DueDate = deal.DueDate;
+                Id = deal.Id;
+                Name = deal.Name;
+                CategoryId = deal.CategoryId;
+                IsComplete = deal.IsComplete;
+                DueDate = deal.DueDate;
         }
     }
 }

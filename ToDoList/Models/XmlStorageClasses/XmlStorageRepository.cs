@@ -34,14 +34,14 @@ namespace ToDoList.Models.XmlStorageClasses
                     Name = c!.Element("name")!.Value,
                     CategoryId = int.Parse(c!.Element("categoryId")!.Value),
                     IsComplete = bool.Parse(c!.Element("isComplete")!.Value),
-                    DueDate = c!.Element("dueDate").IsEmpty ? null : DateTime.Parse(c!.Element("dueDate")!.Value)
+                    DueDate = c!.Element("dueDate")!.Value == "NULL" ? null : DateTime.Parse(c!.Element("dueDate")!.Value)
 
                 })?.ToList();
 
             return d == null ? new() : d;
         }
 
-        public async Task AddDeal(DealView deal)
+        public  void AddDeal(DealView deal)
         {
             var previusId = deals.Element("deals")?.Elements("deal")?.LastOrDefault()?.Element("id")?.Value;
             var currentId = Convert.ToInt32(previusId)+1;
@@ -49,35 +49,37 @@ namespace ToDoList.Models.XmlStorageClasses
             deals.Element("deals")!.Add(new XElement("deal",
                 new XElement("id", currentId),
                 new XElement("name", deal.Name),
-                new XElement("dueDate",deal.DueDate),
+                new XElement("dueDate",deal.DueDate == null?"NULL":deal.DueDate),
                 new XElement("isComplete",deal.IsComplete),
                 new XElement("categoryId",deal.CategoryId)));
             deals.Save(@"XmlStorage/Deals.xml");
 
         }
 
-        public async Task DeleteDeal(int Id)
+        public  void DeleteDeal(int Id)
         {
-            deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id").Value) == Id)?.Remove();
+
+                deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id")!.Value) == Id)?.Remove();
+            
             deals.Save(@"XmlStorage/Deals.xml");
         }
 
-        public async Task UpdateDeal(Deal deal)
+        public  void UpdateDeal(Deal deal)
         {
-           var element =  deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id").Value) == deal.Id);
+           var element =  deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id")!.Value) == deal.Id);
             if (element != null)
             {
                 element.Element("name")!.Value = deal.Name;
                 element.Element("categoryId")!.Value = deal.CategoryId.ToString();
-                element.Element("dueDate")!.Value = deal.DueDate.ToString();
+                    element.Element("dueDate")!.Value = deal!.DueDate == null?"NULL":deal!.DueDate!.ToString()!;
                 element.Element("isComplete")!.Value = deal.IsComplete.ToString();
             deals.Save(@"XmlStorage/Deals.xml");
 
             }
         }
-        public async Task UpdateStateDeal(int Id, bool State)
+        public void UpdateStateDeal(int Id, bool State)
         {
-            var element = deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id").Value) == Id);
+            var element = deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id")!.Value) == Id);
             if (element != null)
             {
                 element.Element("isComplete")!.Value = State.ToString();
@@ -86,7 +88,7 @@ namespace ToDoList.Models.XmlStorageClasses
             }
         }
 
-        public async Task AddCategory(CategoryView category)
+        public void  AddCategory(CategoryView category)
         {
             var previusId = categories.Element("categories")?.Elements("category")?.LastOrDefault()?.Element("id")?.Value;
             var currentId = Convert.ToInt32(previusId) + 1;

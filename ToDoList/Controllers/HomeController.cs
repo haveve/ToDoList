@@ -44,7 +44,7 @@ namespace ToDoList.Controllers
         {
             base.OnActionExecuting(context);
             int.TryParse(ControllerContext.HttpContext.Request.Cookies["FileMethod"], out int value);
-            _appRepository.fileMethod(value);
+            _appRepository.fileMethod(value == 0 ?1 :value);
             _categories = _appRepository.GetCategories();
             _categories.Insert(0, new Category { Id = -1, Name = "All Categories" });
             _deals = _appRepository.GetDeals();
@@ -115,34 +115,15 @@ namespace ToDoList.Controllers
 
         public RedirectToActionResult UpdateDealRedirect(int Id)
         {
-            DealUpdateView DealUpdate = new();
-            try
-            {
-                DealUpdate = new DealUpdateView(_deals.First(d => d.Id == Id));
-            }
-            catch
-            {
-                throw new NullReferenceException("Does not exist deal with added id");
-            }
+            DealUpdateView DealUpdate = new DealUpdateView(_deals.First(d => d.Id == Id));
                 return RedirectToAction("GetTask", new {DealUpdate.Id ,DealUpdate.DueDate, DealUpdate.CategoryId,DealUpdate.Name,DealUpdate.IsComplete });
        
         }
 
         public IActionResult UpdateDealState(int Id)
         {
-            Deal deal = new();
-
-            try { 
-
-             deal = _deals.First(d => d.Id == Id);
-            
-            }
-            catch
-            {
-                throw new NullReferenceException("Does not exist deal with added id");
-            }
-
-            _appRepository.UpdateStateDeal(Id, deal.IsComplete);
+            Deal deal = _deals.First(d => d.Id == Id);
+            _appRepository.UpdateStateDeal(Id, !deal.IsComplete);
             return RedirectToAction("GetTask");
         }
 

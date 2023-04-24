@@ -26,7 +26,6 @@ namespace ToDoList.Models.FileMethodClasses
         {
             1 => _appRepository.GetCategories(),
             2 => _storageRepository.GetCategories(),
-            _ => _appRepository.GetCategories(),
         };
 
 
@@ -34,7 +33,6 @@ namespace ToDoList.Models.FileMethodClasses
         {
             1 => _appRepository.GetDeals(),
             2 => _storageRepository.GetDeals(),
-            _ => _appRepository.GetDeals(),
         };
 
         public async Task AddDeal(DealView deal)
@@ -42,8 +40,7 @@ namespace ToDoList.Models.FileMethodClasses
             switch (_currentMethod)
             {
                 case 1: await _appRepository.AddDeal(deal); break;
-                case 2: await _storageRepository.AddDeal(deal); break;
-                default: await _appRepository.AddDeal(deal); break;
+                case 2:  _storageRepository.AddDeal(deal); break;
             }
         }
 
@@ -52,8 +49,7 @@ namespace ToDoList.Models.FileMethodClasses
             switch (_currentMethod)
             {
                 case 1: await _appRepository.DeleteDeal(Id); break;
-                case 2: await _storageRepository.DeleteDeal(Id); break;
-                default: await _appRepository.DeleteDeal(Id); break;
+                case 2:  _storageRepository.DeleteDeal(Id); break;
             }
         }
 
@@ -62,8 +58,7 @@ namespace ToDoList.Models.FileMethodClasses
             switch (_currentMethod)
             {
                 case 1: await _appRepository.UpdateDeal(deal); break;
-                case 2: await _storageRepository.UpdateDeal(deal); break;
-                default: await _appRepository.UpdateDeal(deal); break;
+                case 2:  _storageRepository.UpdateDeal(deal); break;
             }
 
         }
@@ -72,8 +67,7 @@ namespace ToDoList.Models.FileMethodClasses
             switch (_currentMethod)
             {
                 case 1: await _appRepository.UpdateStateDeal(Id,State); break;
-                case 2: await _storageRepository.UpdateStateDeal(Id, State); break;
-                default: await _appRepository.UpdateStateDeal(Id, State); break;
+                case 2:  _storageRepository.UpdateStateDeal(Id, State); break;
             }
         }
 
@@ -82,8 +76,7 @@ namespace ToDoList.Models.FileMethodClasses
             switch (_currentMethod)
             {
                 case 1: await _appRepository.AddCategory(category); break;
-                case 2: await _storageRepository.AddCategory(category); break;
-                default: await _appRepository.AddCategory(category); break;
+                case 2:  _storageRepository.AddCategory(category); break;
             }
         }
 

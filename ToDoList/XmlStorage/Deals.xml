@@ -1,16 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <deals>
   <deal>
-    <id>2</id>
-    <name>Create XML storage</name>
-    <dueDate>2023-04-13T19:13:00</dueDate>
-    <isComplete>False</isComplete>
-    <categoryId>2</categoryId>
-  </deal>
-  <deal>
     <id>3</id>
     <name>Clean home</name>
-    <dueDate>2023-04-28T19:18:00</dueDate>
+    <dueDate>NULL</dueDate>
     <isComplete>False</isComplete>
     <categoryId>1</categoryId>
   </deal>

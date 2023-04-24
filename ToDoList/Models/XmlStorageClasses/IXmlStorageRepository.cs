@@ -8,14 +8,14 @@ namespace ToDoList.Models.XmlStorageClasses
 
         public List<Deal> GetDeals();
 
-        public Task AddDeal(DealView deal);
+        public void AddDeal(DealView deal);
 
-        public Task DeleteDeal(int Id);
+        public void DeleteDeal(int Id);
 
-        public Task UpdateDeal(Deal deal);
+        public void UpdateDeal(Deal deal);
 
-        public Task UpdateStateDeal(int Id, bool state);
+        public void UpdateStateDeal(int Id, bool state);
 
-        public Task AddCategory(CategoryView category);
+        public void AddCategory(CategoryView category);
     }
 }

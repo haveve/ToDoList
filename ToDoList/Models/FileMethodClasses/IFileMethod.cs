@@ -4,7 +4,7 @@ namespace ToDoList.Models.FileMethodClasses
 {
     public interface IFileMethod
     {
-        public void fileMethod(int? id);
+        public void fileMethod(int id);
 
         public List<Category> GetCategories();
 

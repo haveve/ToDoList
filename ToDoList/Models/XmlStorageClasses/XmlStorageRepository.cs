@@ -41,26 +41,28 @@ namespace ToDoList.Models.XmlStorageClasses
             return d == null ? new() : d;
         }
 
-        public  void AddDeal(DealView deal)
+        public void AddDeal(DealView deal)
         {
-            var previusId = deals.Element("deals")?.Elements("deal")?.LastOrDefault()?.Element("id")?.Value;
-            var currentId = Convert.ToInt32(previusId)+1;
+            var previusId = deals.Element("deals")!.Elements("deal")?.LastOrDefault()?.Element("id")!.Value;
+            if (previusId != null)
+            {
+                var currentId = Convert.ToInt32(previusId) + 1;
 
-            deals.Element("deals")!.Add(new XElement("deal",
-                new XElement("id", currentId),
-                new XElement("name", deal.Name),
-                new XElement("dueDate",deal.DueDate == null?"NULL":deal.DueDate),
-                new XElement("isComplete",deal.IsComplete),
-                new XElement("categoryId",deal.CategoryId)));
-            deals.Save(@"XmlStorage/Deals.xml");
-
+                deals.Element("deals")!.Add(new XElement("deal",
+                    new XElement("id", currentId),
+                    new XElement("name", deal.Name),
+                    new XElement("dueDate", deal.DueDate == null ? "NULL" : deal.DueDate),
+                    new XElement("isComplete", deal.IsComplete),
+                    new XElement("categoryId", deal.CategoryId)));
+                deals.Save(@"XmlStorage/Deals.xml");
+                return;
+            }
         }
 
-        public  void DeleteDeal(int Id)
+        public void DeleteDeal(int Id)
         {
 
-                deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id")!.Value) == Id)?.Remove();
-            
+            deals.Element("deals")!.Elements("deal")?.FirstOrDefault(d => int.Parse(d.Element("id")!.Value) == Id)?.Remove();   
             deals.Save(@"XmlStorage/Deals.xml");
         }
 
@@ -74,7 +76,6 @@ namespace ToDoList.Models.XmlStorageClasses
                     element.Element("dueDate")!.Value = deal!.DueDate == null?"NULL":deal!.DueDate!.ToString()!;
                 element.Element("isComplete")!.Value = deal.IsComplete.ToString();
             deals.Save(@"XmlStorage/Deals.xml");
-
             }
         }
         public void UpdateStateDeal(int Id, bool State)

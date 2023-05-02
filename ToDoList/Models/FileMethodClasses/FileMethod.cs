@@ -8,7 +8,7 @@ namespace ToDoList.Models.FileMethodClasses
 {
     public class FileMethod : IFileMethod
     {
-        private int? _currentMethod;
+        private int _currentMethod = 1;
         private IXmlStorageRepository _storageRepository;
         private IAppRepository _appRepository;
         public FileMethod(IXmlStorageRepository xDoc, IAppRepository repo)
@@ -17,7 +17,7 @@ namespace ToDoList.Models.FileMethodClasses
             _appRepository = repo;
         }
 
-        public void fileMethod(int? Id)
+        public void fileMethod(int Id)
         {
             _currentMethod = Id;
         }

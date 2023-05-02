@@ -4,7 +4,17 @@ using System.Net;
 using ToDoList.Models.DapperClasses;
 using ToDoList.Models.FileMethodClasses;
 using ToDoList.Models.XmlStorageClasses;
-
+using GraphQL;
+using Microsoft.AspNetCore.Builder;
+using GraphQL.Introspection;
+using ToDoList.Models;
+using Newtonsoft.Json.Linq;
+using ToDoList.ViewModel;
+using GraphQL.Types;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using GraphQL.MicrosoftDI;
+using ToDoList.Graphql;
 namespace ToDoList
 {
     public class Program
@@ -12,9 +22,6 @@ namespace ToDoList
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            //Anti Forgery and add MVC  
-            builder.Services.AddMvc(options => { options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); });
 
             //Dapper
             builder.Services.AddSingleton<DapperConnectionProvider>();
@@ -27,39 +34,21 @@ namespace ToDoList
             builder.Services.AddScoped<IFileMethod, FileMethod>();
 
 
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddSingleton<ISchema, ToDoListScheme>(services => new ToDoListScheme(new SelfActivatingServiceProvider(services)));
+
+            builder.Services.AddGraphQL(c=>c.AddSystemTextJson());
+
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-
-            //Rewrite rout when user wanna Update Task state when that is in updating state
-            var options = new RewriteOptions().AddRedirect(@"Home/GetTask/Home/UpdateDealState/(\d+)", "Home/UpdateDealState?Id=$1");
-            app.UseRewriter(options);
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller}/{action}/{Id?}",
-            defaults : new
-            {
-                controller = "Home",
-                action = "GetTask"
-             }
-            );
+            app.UseGraphQL();
+            app.UseGraphQLAltair();
 
             app.Run();
         }
     }
+
 }

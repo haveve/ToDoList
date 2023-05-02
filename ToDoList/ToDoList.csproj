@@ -13,6 +13,12 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="GraphQL" Version="7.4.1" />
+    <PackageReference Include="GraphQL.NewtonsoftJson" Version="7.4.1" />
+    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.4.0" />
+    <PackageReference Include="GraphQL.Server.Ui.Altair" Version="7.4.0" />
+    <PackageReference Include="GraphQL.Server.Ui.GraphiQL" Version="7.4.0" />
+    <PackageReference Include="GraphQL.SystemTextJson" Version="7.4.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
   </ItemGroup>
 

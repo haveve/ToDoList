@@ -3,6 +3,7 @@ using ToDoList.Graphql.Models;
 using ToDoList.Models;
 using ToDoList.ViewModel;
 using ToDoList.Models.FileMethodClasses;
+using static ToDoList.Models.DataMethod.DataMethod;
 namespace ToDoList.Graphql.Query
 {
     public class Query : ObjectGraphType
@@ -29,25 +30,18 @@ namespace ToDoList.Graphql.Query
             Field<ToDoListGraphType>("getdeals")
                 .Resolve(context =>
             {
+                int fileMethodIndex = FromHead(context.RequestServices.GetService<IHttpContextAccessor>().HttpContext);
                 var _appRepository = context.RequestServices.GetService<IFileMethod>();
-                var HttpContext = context.RequestServices.GetService<IHttpContextAccessor>().HttpContext;
+                _appRepository.fileMethod(fileMethodIndex);
 
-                int.TryParse(HttpContext.Request.Cookies["FileMethod"], out int value);
-                _appRepository.fileMethod(value == 0 ? 1 : value);
                 var _categories = _appRepository.GetCategories();
                 _categories.Insert(0, new Category { Id = -1, Name = "All Categories" });
                 var _deals = SortDeals(_appRepository.GetDeals());
 
-                int.TryParse(HttpContext.Request.Cookies["CategorySort"], out int value1);
-                int CategorySortId = value1;
                 var data = new ToDoListView();
                 data.categories = _categories;
                 data.deals = _deals;
 
-                if (CategorySortId <= 0 || CategorySortId > _categories.LastOrDefault()?.Id)
-                    return data;
-
-                data.deals = SortDeals(data.deals).Where(d => d.CategoryId == CategorySortId).ToList();
                 return data;
 
             });

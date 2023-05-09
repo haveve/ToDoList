@@ -7,4 +7,11 @@
     <isComplete>False</isComplete>
     <categoryId>1</categoryId>
   </deal>
+  <deal>
+    <id>4</id>
+    <name>Take a pill</name>
+    <dueDate>NULL</dueDate>
+    <isComplete>false</isComplete>
+    <categoryId>1</categoryId>
+  </deal>
 </deals>

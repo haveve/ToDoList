@@ -9,7 +9,7 @@ namespace ToDoList.Models.DataMethod
         {
             if (!context.Request.Cookies.TryGetValue("FileMethod", out string? value))
             {
-                throw new ArgumentException("There is no header with name \" File Method \" ");
+                throw new ArgumentException("There is no header with name 'File Method' ");
             }
 
             if (!int.TryParse(value, out int dataType))
@@ -29,7 +29,7 @@ namespace ToDoList.Models.DataMethod
         {
             if (!context.Request.Headers.TryGetValue("FileMethod", out Microsoft.Extensions.Primitives.StringValues value))
             {
-                throw new ArgumentException("There is no header with name \" File Method \" ");
+                throw new ArgumentException("There is no header with name  'File Method'  ");
             }
 
             if (!int.TryParse(value, out int dataType))

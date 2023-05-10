@@ -15,6 +15,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using GraphQL.MicrosoftDI;
 using ToDoList.Graphql;
+using ToDoList.Graphql.Models.ErrorHandleProvider;
+
 namespace ToDoList
 {
     public class Program
@@ -38,7 +40,8 @@ namespace ToDoList
 
             builder.Services.AddSingleton<ISchema, ToDoListScheme>(services => new ToDoListScheme(new SelfActivatingServiceProvider(services)));
 
-            builder.Services.AddGraphQL(c=>c.AddSystemTextJson());
+            builder.Services.AddGraphQL(c => c.AddSystemTextJson()
+                                              .AddErrorInfoProvider<ErrorHandleProvider>());
 
 
             var app = builder.Build();

@@ -1,7 +1,5 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using Microsoft.IdentityModel.Tokens;
-using ToDoList.Graphql.Models;
 using ToDoList.Models;
 using ToDoList.Models.FileMethodClasses;
 using ToDoList.ViewModel;
